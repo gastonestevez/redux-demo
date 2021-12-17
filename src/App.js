@@ -1,25 +1,42 @@
-import logo from './logo.svg';
 import './App.css';
+import { connect } from 'react-redux';
+import { setLogout, setLogin } from  './redux/reducers/loginReducer'
 
-function App() {
+function App(props) {
+  const handleLogout = () => {
+    console.log({props})
+    props.logout()
+  }
+
+  const handleLogin = () => {
+    props.login({
+      username: 'Gaston',
+      token: 'asdftoken12345asdf'
+    })
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={() => handleLogin()}>Login</button>
+      <button onClick={() => handleLogout()}>Logout</button>
+      <p>User is loggedIn: {props.loginReducer.username}</p>
+      
     </div>
   );
 }
 
-export default App;
+const mapStateToProps =  (state) => {
+  console.log(state)
+  return {
+    loginReducer: state.loginReducer
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logout: () => dispatch(setLogout()),
+    login: (user) => dispatch(setLogin(user))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
